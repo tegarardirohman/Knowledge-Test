@@ -1,55 +1,50 @@
-import React, { useState } from 'react'
-import Input from './Input'
-import Button from './Button'
+import React, { useState } from 'react';
+import Input from './Input';
+import Button from './Button';
+import { setCookie } from 'nookies';
 
 const LoginForm = () => {
-  // State untuk menyimpan nilai input form
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [rememberMe, setRememberMe] = useState(false) 
-  const [error, setError] = useState('') 
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
+  const [error, setError] = useState('');
 
-  // Fungsi untuk menangani pengiriman form
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault() 
+    e.preventDefault();
 
-
-    // Validasi input
     if (!email || !password) {
-      setError('Email dan kata sandi harus diisi')
-      return
+      setError('Email dan kata sandi harus diisi');
+      return;
     }
 
-    // Kirim data ke API untuk login
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          email,
-          password,
-          rememberMe,
-        }),
-      })
+        body: JSON.stringify({ email, password }),
+      });
 
       if (!response.ok) {
-        throw new Error('Email atau kata sandi salah')
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Email atau kata sandi salah');
       }
 
-      const data = await response.json()
-      console.log('Login berhasil', data)
+      const data = await response.json();
 
-      // Simpan token atau redirect jika berhasil
-      // Misalnya, simpan token di localStorage atau sesi
-      localStorage.setItem('authToken', data.token)
-      // Redirect ke halaman lain setelah login sukses
-      window.location.href = '/dashboard'
-    } catch (error) {
-      setError("Email atau kata sandi salah");
+      if (rememberMe) {
+        setCookie(null, 'authToken', data.access_token, { maxAge: 24 * 60 * 60, path: '/' });
+      } else {
+        setCookie(null, 'authToken', data.access_token, { path: '/' });
+      }
+
+      window.location.href = '/';
+
+    } catch (error: any) {
+      setError(error.message || 'Terjadi kesalahan saat login');
     }
-  }
+  };
 
   return (
     <form onSubmit={handleSubmit}>
@@ -71,7 +66,6 @@ const LoginForm = () => {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-
         <div className="w-full flex gap-3 mb-5">
           <input
             aria-label="ingat saya"
@@ -79,25 +73,17 @@ const LoginForm = () => {
             name="ingat saya"
             id="remember"
             checked={rememberMe}
-            onChange={() => setRememberMe(!rememberMe)} // Toggle nilai rememberMe
+            onChange={() => setRememberMe(!rememberMe)}
           />
           <label htmlFor="remember" className="cursor-pointer">
             Ingat saya
           </label>
         </div>
-
-        {/* Tampilkan pesan error jika ada */}
         {error && <div className="text-red-500 text-sm">{error}</div>}
-
-        <Button
-          text="Masuk"
-          variant="primary"
-          type="submit"
-          onClick={() => {}}
-        />
+        <Button onClick={() => {}} text="Masuk" variant="primary" type="submit" />
       </div>
     </form>
-  )
-}
+  );
+};
 
-export default LoginForm
+export default LoginForm;

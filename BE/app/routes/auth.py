@@ -45,7 +45,9 @@ api = Api(auth_bp)
                         'type': 'object',
                         'properties': {
                             'id': {'type': 'integer'},
-                            'name': {'type': 'string'}
+                            'name': {'type': 'string'},
+                            'email': {'type': 'string'},
+                            'gender': {'type': 'string'}
                         }
                     }
                 }
@@ -72,7 +74,7 @@ def register():
             return jsonify({'message': 'User already exists'}), 400
         else:
             new_user = create_user(name, email, password, gender)
-            return jsonify({'message': 'User created successfully', 'user': {'id': new_user.id, 'name': new_user.name}}), 201
+            return jsonify({'message': 'User created successfully', 'user': {'id': new_user.id, 'name': new_user.name, 'email': new_user.email, 'gender': new_user.gender}}), 201
 
     except Exception as e:
         return jsonify({'message': 'Internal server error'}), 500

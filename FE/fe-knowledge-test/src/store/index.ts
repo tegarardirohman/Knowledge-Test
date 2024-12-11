@@ -1,15 +1,13 @@
-// store/index.ts
-import { configureStore } from '@reduxjs/toolkit';
-import userReducer from './userSlice';
+import { configureStore } from '@reduxjs/toolkit'
 
-// Konfigurasi store dengan userReducer
-export const store = configureStore({
-  reducer: {
-    user: userReducer,
-  },
-});
+export const makeStore = () => {
+  return configureStore({
+    reducer: {}
+  })
+}
 
-// Tipe untuk state global
-export type RootState = ReturnType<typeof store.getState>;
-// Tipe untuk dispatch
-export type AppDispatch = typeof store.dispatch;
+// Infer the type of makeStore
+export type AppStore = ReturnType<typeof makeStore>
+// Infer the `RootState` and `AppDispatch` types from the store itself
+export type RootState = ReturnType<AppStore['getState']>
+export type AppDispatch = AppStore['dispatch']

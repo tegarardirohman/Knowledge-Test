@@ -1,7 +1,5 @@
 "use client";
 
-import Button from "@/components/Button";
-import Input from "@/components/Input";
 import LoginForm from "@/components/LoginForm";
 import RegisterForm from "@/components/RegisterForm";
 import React, { useState } from "react";
