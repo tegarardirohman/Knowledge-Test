@@ -2,8 +2,10 @@ from flask import Blueprint, request, jsonify
 from app.services.product_service import create_product, get_all_products, get_product_by_id, update_product, delete_product
 from flask_jwt_extended import jwt_required
 from flasgger import swag_from
+from flask_restful import Api
 
 product_bp = Blueprint('product', __name__, url_prefix='/api/v1/products')
+api = Api(product_bp)
 
 # Endpoint untuk mendapatkan semua produk
 @product_bp.route('/', methods=['GET'])
@@ -32,8 +34,8 @@ def get_products():
     try:
         products = get_all_products()
         return jsonify([{'id': p.id, 'name': p.name, 'description': p.description, 'price': p.price} for p in products]), 200
-    except Exception:
-        return jsonify({'message': 'Internal server error while fetching products'}), 500
+    except Exception as e:
+        return jsonify({'message': 'Internal server error while fetching products', 'error': str(e)}), 500
 
 # Endpoint untuk mendapatkan produk berdasarkan ID
 @product_bp.route('/<int:product_id>', methods=['GET'])

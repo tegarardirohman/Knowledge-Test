@@ -25,7 +25,7 @@ def authenticate_user(email, password):
 
         if user and check_password_hash(user.password, password):
             return create_access_token(
-                identity=user.id,
+                identity=str(user.id),
                 expires_delta=datetime.timedelta(days=1), 
                 additional_claims={"name": user.name}
             )

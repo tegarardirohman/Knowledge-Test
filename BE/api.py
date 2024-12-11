@@ -11,7 +11,7 @@ from flask_cors import CORS
 app = Flask(__name__)
 
 #activate CORS for all origins
-CORS(app, origins="*")
+CORS(app, origins="*", methods=["GET", "POST", "PUT", "DELETE"])
 
 #jwt initialization
 from flask_jwt_extended import JWTManager

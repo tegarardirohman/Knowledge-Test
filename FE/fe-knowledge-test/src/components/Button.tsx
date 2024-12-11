@@ -29,7 +29,7 @@ const Button: React.FC<ButtonProps> = ({
     <button
       type={type}
       onClick={onClick}
-      className={`${baseStyle} ${variantStyles[variant]}`}
+      className={`${baseStyle} ${variantStyles[variant]} w-full`}
       disabled={disabled}
     >
       {text}

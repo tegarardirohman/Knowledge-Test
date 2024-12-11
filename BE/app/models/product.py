@@ -1,7 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 import datetime
-
-db = SQLAlchemy()
+from app.models.db import db
 
 class Product(db.Model):
     __tablename__ = 'products'
