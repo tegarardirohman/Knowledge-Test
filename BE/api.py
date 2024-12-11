@@ -5,9 +5,14 @@ from app.models.user import db
 from app.routes.auth import auth_bp
 from app.routes.product import product_bp
 from app.config import Config
+from flask_cors import CORS
 
 #flask initialization
 app = Flask(__name__)
+
+#activate CORS for all origins
+CORS(app, origins="*")
+
 app.config.from_object(Config)
 db.init_app(app)
 
